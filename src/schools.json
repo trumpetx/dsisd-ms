@@ -1,0 +1,46 @@
+{
+  "dsm" : {
+    "label" : "Dripping Springs Middle",
+    "cap" : 850,
+    "color" : "#0FF",
+    "active": true,
+    "position": {
+      "lat": 0,
+      "lng": 0
+    },
+    "pus": []
+  },
+  "ssm" : {
+    "label" : "Sycamore Springs Middle",
+    "cap" : 850,
+    "color" : "#0F0",
+    "active": true,
+    "position": {
+      "lat": 0,
+      "lng": 0
+    },
+    "pus": []
+  },
+  "ms3" : {
+    "label" : "Third Springs Middle",
+    "cap" : 850,
+    "color" : "#FF0",
+    "active": false,
+    "position": {
+      "lat": 0,
+      "lng": 0
+    },
+    "pus": []
+  },
+  "ms4" : {
+    "label" : "Fourth Springs Middle",
+    "cap" : 850,
+    "color" : "#00F",
+    "active": false,
+    "position": {
+      "lat": 0,
+      "lng": 0
+    },
+    "pus": []
+  }
+}
