@@ -1,46 +1,38 @@
 {
   "dsm" : {
-    "label" : "Dripping Springs Middle",
+    "label" : "Dripping Springs",
     "cap" : 850,
-    "color" : "#0FF",
-    "active": true,
+    "color" : "#FF0000",
     "position": {
-      "lat": 0,
-      "lng": 0
-    },
-    "pus": []
+      "lat": 30.2020486,
+      "lng": -98.1151708
+    }
   },
   "ssm" : {
-    "label" : "Sycamore Springs Middle",
+    "label" : "Sycamore Springs",
     "cap" : 850,
-    "color" : "#0F0",
-    "active": true,
+    "color" : "#FFFF00",
     "position": {
-      "lat": 0,
-      "lng": 0
-    },
-    "pus": []
+      "lat": 30.1787376,
+      "lng": -98.0020132
+    }
   },
-  "ms3" : {
-    "label" : "Third Springs Middle",
+  "yyy" : {
+    "label" : "Darden Springs",
     "cap" : 850,
-    "color" : "#FF0",
-    "active": false,
+    "color" : "#800080",
     "position": {
-      "lat": 0,
-      "lng": 0
-    },
-    "pus": []
+      "lat": 30.1532186,
+      "lng": -98.0104597
+    }
   },
-  "ms4" : {
-    "label" : "Fourth Springs Middle",
+  "zzz" : {
+    "label" : "Headwaters Springs",
     "cap" : 850,
-    "color" : "#00F",
-    "active": false,
+    "color" : "#008000",
     "position": {
-      "lat": 0,
-      "lng": 0
-    },
-    "pus": []
+      "lat": 30.1941786,
+      "lng": -98.0453197
+    }
   }
 }
