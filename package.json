@@ -1,5 +1,6 @@
 {
   "name": "dsisd",
+  "homepage": "http://trumpetx.com/dsisd-ms/",
   "version": "0.1.0",
   "private": true,
   "dependencies": {

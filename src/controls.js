@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import _ from 'lodash';
 import Capacity from './capacity';
+import SaveAndRestore from './saveandrestore';
+import Upload from './upload';
 import Dispatcher from "./dispatcher";
 
 class Controls extends Component {
@@ -27,10 +29,11 @@ class Controls extends Component {
     }
 
     render() {
-        return (<div style={{fontSize: 10}}>
-            <button onClick={() => Dispatcher.dispatch({ action: 'set_default'}) }>Reset</button>
+        return (<div style={this.props.style}>
+            {this.props.children}
+            <SaveAndRestore />
             {Object.keys(this.props.schools).map(school =>
-                <div key={school}>
+                <span key={school} style={{width: this.props.style.width / 2, display: 'inline-block'}}>
                     <h3>{this.props.schools[school].label}</h3>
                     <Capacity school={school} capacity={this.state.capacity[school] || this.props.schools[school].cap} />
                     {this.props.years.map((y) => {
@@ -38,7 +41,7 @@ class Controls extends Component {
                         let color = '#EEE';
                         let schoolCapacity = this.state.capacity[school] || this.props.schools[school].cap;
                         if(v > 1.2 * schoolCapacity){
-                            color = '#F00';
+                            color = '#F30';
                         } else if (v > schoolCapacity){
                             color = '#FF0';
                         }
@@ -48,7 +51,8 @@ class Controls extends Component {
                                    value={v}/>
                         </div>
                     })}
-                </div>)}
+                </span>)}
+            <Upload />
         </div>);
     }
 }
