@@ -8,7 +8,7 @@ import _ from 'lodash';
 import Dispatcher from './dispatcher';
 import Papa from 'papaparse';
 
-const SIDEBAR_WIDTH = 350;
+const SIDEBAR_WIDTH = 400;
 
 class App extends Component {
     constructor(props) {
@@ -212,7 +212,7 @@ class App extends Component {
                 <Schools schools={this.state.schoolData}  />
             </GoogleMapApp>
             <Controls
-                style={{ fontSize: 10, padding: 10, position: 'absolute', top: 0, left: this.state.width - SIDEBAR_WIDTH, width: SIDEBAR_WIDTH, height: this.state.height}}
+                style={{ fontSize: 10, paddingLeft: 20, position: 'absolute', top: 0, left: this.state.width - SIDEBAR_WIDTH, width: SIDEBAR_WIDTH - 37, height: this.state.height}}
                 schools={this.state.schoolData}
                 years={this.state.years}
                 schoolState={this.state.schools}

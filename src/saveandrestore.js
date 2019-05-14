@@ -52,7 +52,7 @@ class SaveAndRestore extends Component {
             </div>
             <br/>
             <div>
-                <input type='text' ref={this.label} style={{ width: '25%' }}/> <button style={{marginRight: 50}} onClick={() => Dispatcher.dispatch({ action: 'save', label: this.label.current.value })}>Save</button>
+                <input type='text' ref={this.label} style={{ width: '100px' }}/> <button style={{marginRight: 50}} onClick={() => Dispatcher.dispatch({ action: 'save', label: this.label.current.value })}>Save</button>
                 {clearSaves}
             </div>
             <br/>

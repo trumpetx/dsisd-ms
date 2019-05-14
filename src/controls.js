@@ -55,6 +55,8 @@ class Controls extends Component {
                     })}
                 </span>)}
             <Upload />
+            <br/>
+            <br/>
         </div>);
     }
 }
