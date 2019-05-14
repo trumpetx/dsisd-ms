@@ -11,5 +11,6 @@ export default (props) =>
         >
             <option value={850}>850</option>
             <option value={1250}>1250</option>
+            <option value={2000}>2000</option>
         </select>
     </div>;

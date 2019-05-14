@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import _ from 'lodash';
 import Capacity from './capacity';
+import Pop from './pop';
 import SaveAndRestore from './saveandrestore';
 import Upload from './upload';
 import Dispatcher from "./dispatcher";
@@ -32,6 +33,7 @@ class Controls extends Component {
         return (<div style={this.props.style}>
             {this.props.children}
             <SaveAndRestore />
+            <Pop pop={this.props.pop} />
             {Object.keys(this.props.schools).map(school =>
                 <span key={school} style={{width: this.props.style.width / 2, display: 'inline-block'}}>
                     <h3>{this.props.schools[school].label}</h3>

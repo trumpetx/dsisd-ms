@@ -19,6 +19,7 @@ class App extends Component {
             customSchools: undefined,
             customPopulation: undefined,
             planningUnits: _.keyBy(Object.keys(GisData).map((k) => { return { id: k, color: undefined }; } ), 'id'),
+            pop: 'EE-5th',
         };
     }
 
@@ -40,7 +41,7 @@ class App extends Component {
             return;
         }
         let saves = localStorage.getItem('saves') ? JSON.parse(localStorage.getItem('saves')) : {};
-        saves[new Date().toISOString()] = _.omit(this.state, ['width', 'height']);
+        saves[(_.isEmpty(payload.label) ? this.state.pop : payload.label) + '~' + new Date().toISOString()] = _.omit(this.state, ['width', 'height']);
         localStorage.setItem('saves', JSON.stringify(saves, (k, v) => v === undefined ? null : v));
         this.setState({}, () => Dispatcher.dispatch({action: 'saves_updated', saveDates: Object.keys(saves)}));
     }
@@ -50,18 +51,24 @@ class App extends Component {
             return;
         }
         Papa.parse(payload.file, {
-            header: true,
+            header: false,
             download: true,
             skipEmptyLines: true,
             complete: (result) => {
-                let data = _.values(result.data).map((row) => _.transform(row, (result, value, key) => {
-                    if(key.toLocaleLowerCase() === 'pu'){
-                        result['pu'] = value.toLowerCase();
-                    } else {
-                        result[key] = _.toInteger(value);
+                result = result.data;
+                let years = result[0];
+                const headers = result[1];
+                const data = [];
+                for(let i = 2; i < result.length; i++){
+                    const entry = { pu: result[i][0].toLowerCase() };
+                    for(let h = 1; h < headers.length; h++){
+                        if(headers[h] === this.state.pop){
+                            entry[years[h]] = _.toInteger(result[i][h]);
+                        }
                     }
-                }, {}));
-                let years = _.slice(result.meta.fields, 1);
+                    data.push(entry);
+                }
+                years = _.union(_.slice(years, 1));
                 this.setState({data: _.keyBy(data, 'pu'), years: years, customPopulation: payload.custom }, ()=> payload.next && Dispatcher.dispatch((payload.next)));
             }
         });
@@ -92,7 +99,7 @@ class App extends Component {
                             result[k] = _.trim(value);
                     }
                 }, {}));
-                data =  _.keyBy(data, 'id');
+                data =  _.keyBy(_.filter(data, ['pop', this.state.pop]), 'id');
                 _.forEach(data, (v) => v['position'] = {lat: v.lat, lng: v.lng});
                 this.setState({
                     schoolData: data,
@@ -112,12 +119,18 @@ class App extends Component {
         let planningUnits = this.state.planningUnits;
         _.forEach(schools, (school) => school.pus = []);
         // Specific to Middle School Planning 2018
-        if(schools['ssm'] && schools['dsm']) {
+        if(schools['dsm']) {
             schools['ssm'].pus = ['34b', '36', '37a', '37b', '38', '39', '40', '41', '42', '43a', '43b', '44', '45', '46', '47'];
             schools['dsm'].pus = _.xor(Object.keys(GisData), schools['ssm'].pus);
-            _.forEach(schools['dsm'].pus, (pu) => planningUnits[pu].color = this.state.schoolData['dsm'].color);
-            _.forEach(schools['ssm'].pus, (pu) => planningUnits[pu].color = this.state.schoolData['ssm'].color);
+        } else if(schools['dshs']){
+            schools['dshs'].pus = Object.keys(GisData);
+        } else if(schools['dse']) {
+            schools['roe'].pus = ['37a', '37b'];
+            schools['sse'].pus = ['36', '34b', '43a', '41', '42', '43b', '44', '45', '40', '46', '38', '39', '47'];
+            schools['dse'].pus = ['2', '4', '5', '11', '12', '13', '15', '16', '17', '18', '19', '20a', '20b', '35'];
+            schools['wse'].pus = _.xor(Object.keys(GisData), _.concat(schools['roe'].pus, schools['sse'].pus, schools['dse'].pus));
         }
+        Object.keys(schools).forEach(k => _.forEach(schools[k].pus, (pu) => planningUnits[pu].color = this.state.schoolData[k].color));
         this.setState({schools: schools, planningUnits: planningUnits});
     }
 
@@ -143,15 +156,28 @@ class App extends Component {
         this.setState({schools: schools, planningUnits: planningUnits });
     }
 
+    changePop = (payload) => {
+        if(payload.action !== 'change_pop'){
+            return;
+        }
+        this.setState({pop: payload.value}, this.reset);
+    }
+
     componentDidMount() {
         this.updateWindowDimensions();
         window.addEventListener('resize', this.updateWindowDimensions);
-        this.toggle_pu_token = Dispatcher.register(this.togglePlanningUnit);
-        this.set_default_token = Dispatcher.register(this.setDefault);
-        this.upload_population_token = Dispatcher.register(this.uploadPopulation);
-        this.upload_schools_token = Dispatcher.register(this.uploadSchools);
-        this.restore_token = Dispatcher.register(this.restore);
-        this.save_token = Dispatcher.register(this.save);
+        this.tokens = [];
+        this.tokens.push(Dispatcher.register(this.togglePlanningUnit));
+        this.tokens.push(Dispatcher.register(this.setDefault));
+        this.tokens.push(Dispatcher.register(this.uploadPopulation));
+        this.tokens.push(Dispatcher.register(this.uploadSchools));
+        this.tokens.push(Dispatcher.register(this.restore));
+        this.tokens.push(Dispatcher.register(this.save));
+        this.tokens.push(Dispatcher.register(this.changePop));
+        this.reset();
+    }
+
+    reset = () => {
         Dispatcher.dispatch({
             action: 'upload_schools',
             file: require('./schools.csv'),
@@ -165,12 +191,8 @@ class App extends Component {
 
     componentWillUnmount() {
         window.removeEventListener('resize', this.updateWindowDimensions);
-        Dispatcher.unregister(this.toggle_pu_token);
-        Dispatcher.unregister(this.set_default_token);
-        Dispatcher.unregister(this.upload_population_token);
-        Dispatcher.unregister(this.upload_schools_token);
-        Dispatcher.unregister(this.restore_token);
-        Dispatcher.unregister(this.save_token);
+        this.tokens.forEach(t => Dispatcher.unregister(t));
+        this.tokens = [];
     }
 
     updateWindowDimensions = () => this.setState({width: window.innerWidth, height: window.innerHeight});
@@ -194,7 +216,9 @@ class App extends Component {
                 schools={this.state.schoolData}
                 years={this.state.years}
                 schoolState={this.state.schools}
-                data={this.state.data}>
+                data={this.state.data}
+                pop={this.state.pop}
+                >
                 {customPopulation}
                 {customSchools}
             </Controls>
