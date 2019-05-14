@@ -22,7 +22,7 @@ This brings us to today (2019).  There's once again the need for planning maps a
 ** Upload new custom data files using the appropriately labeled buttons.
 ** The new maps should use your newly updated data!
 ** There is very little (read: none) error handling, so make sure the format of the upgrade file is the same or you'll get nasty messages from the application.
-** For schools, you can simply add new rows or update information on the existing ones.  Make sure the "id" is unique for any new school added.  Blank lines are automatically skipped.  New columns will be ignored.  Capacities must match one of: 850, 900, 1250 or 2000.  These are hard-coded in the app (convenience).
+** For schools, you can simply add new rows or update information on the existing ones.  Make sure the "id" is unique for any new school added.  Blank lines are automatically skipped.  New columns will be ignored.  Capacities should match one of: 850, 900, 1250 or 2000.  These are hard-coded in the app (convenience).  If you provide a different capacity, it will work, but the dropdown to change won't be usable.
 ** For population data, the PU column is not editable (don't add new planning units -- the GIS data would need to be updated to allow that).  In general, simply edit the population numbers to follow the same format that currently exists.  If you add additional columns, follow the same 2nd row header format (EE-5th, 6th-8th, etc) and add a new 1st row header for the year.  Adding new years will automatically adjust which years are visible in the applicatoin.
 
 Find a bug?  Have an idea for improvement? Let me know: david@trumpetx.com.
