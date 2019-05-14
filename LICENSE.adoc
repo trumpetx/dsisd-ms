@@ -1,0 +1,12 @@
+==== &copy; David Greene - Released under CC "Attribution License"
+https://creativecommons.org/licenses/by/4.0/
+
+tl;dr:
+
+* You're free to use this however you see fit, provided that you:
+* give me credit if you use this in your own project
+* don't claim my work as yours
+* don't hold me liable if your project burns down your house
+
+==== Full License Text
+https://creativecommons.org/licenses/by/4.0/legalcode

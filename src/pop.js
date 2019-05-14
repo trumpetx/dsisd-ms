@@ -3,7 +3,7 @@ import Dispatcher from "./dispatcher";
 
 export default (props) =>
     <div>
-        <label htmlFor='pop' style={{marginRight: 20, width: '5em'}}>School Planning For: </label>
+        <label htmlFor='pop' style={{marginRight: 20, width: '5em'}}>School Planning for: </label>
         <select
             name='pop'
             onChange={(e) => Dispatcher.dispatch({ action: 'change_pop', value: e.target.value}) }
