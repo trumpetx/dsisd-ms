@@ -20,6 +20,7 @@ class App extends Component {
             customPopulation: undefined,
             planningUnits: _.keyBy(Object.keys(GisData).map((k) => { return { id: k, color: undefined }; } ), 'id'),
             pop: 'EE-5th',
+            contextStyle: { },
         };
     }
 
@@ -106,7 +107,7 @@ class App extends Component {
                     planningUnits: planningUnits,
                     schools: _.keyBy(Object.keys(data).map((k) => { return { id: k, active: true, pus: [] }; } ), 'id'),
                     customSchools: payload.custom
-                }, ()=> payload.next && Dispatcher.dispatch((payload.next)));
+                }, ()=> payload.next && Dispatcher.dispatch(payload.next));
             }
         });
     }
@@ -134,26 +135,54 @@ class App extends Component {
         this.setState({schools: schools, planningUnits: planningUnits});
     }
 
-    togglePlanningUnit = (payload) => {
-        if(payload.action !== 'toggle_pu'){
-            return;
-        }
-        let orderedSchools = Object.keys(this.state.schools).sort();
-        let nextSchool = orderedSchools[0];
+    changePu = (payload) => {
+        const orderedSchools = Object.keys(this.state.schools).sort();
+        const nextSchool = payload.nextSchool;
         for(let i=0; i < orderedSchools.length; i++) {
-            let schoolPlanningUnits = this.state.schools[orderedSchools[i]].pus;
+            const schoolPlanningUnits = this.state.schools[orderedSchools[i]].pus;
             if(schoolPlanningUnits.includes(payload.pu)){
                 _.remove(schoolPlanningUnits, (pu) => pu === payload.pu);
-                if(i+1 !== orderedSchools.length) {
-                    nextSchool = orderedSchools[i + 1];
-                }
             }
         }
-        let planningUnits = this.state.planningUnits;
-        let schools = this.state.schools;
+        const planningUnits = this.state.planningUnits;
+        const schools = this.state.schools;
         planningUnits[payload.pu].color = this.state.schoolData[nextSchool].color;
         schools[nextSchool].pus.push(payload.pu);
-        this.setState({schools: schools, planningUnits: planningUnits });
+        this.setState({schools: schools, planningUnits: planningUnits, contextStyle:{ }});
+    }
+
+    togglePlanningUnit = (payload) => {
+        if(payload.action === 'cancel_pu_change'){
+            this.setState({contextStyle:{ }});
+        } else if(payload.action === 'change_pu'){
+            this.changePu(payload);
+        } else if(payload.action === 'toggle_pu'){
+            let orderedSchools = Object.keys(this.state.schools).sort();
+            let nextSchool = orderedSchools[0];
+            for(let i=0; i < orderedSchools.length; i++) {
+                const schoolPlanningUnits = this.state.schools[orderedSchools[i]].pus;
+                if(schoolPlanningUnits.includes(payload.pu)){
+                    if(i+1 !== orderedSchools.length) {
+                        nextSchool = orderedSchools[i + 1];
+                    }
+                }
+            }
+            this.changePu({pu: payload.pu, nextSchool: nextSchool});
+        } else if(payload.action === 'select_pu'){
+            this.setState({contextStyle: {
+                position: 'absolute',
+                display: 'block',
+                left: payload.x + 15,
+                top: payload.y - 5,
+                zIndex: 99,
+                borderColor: 'black',
+                backgroundColor: '#EEE',
+                borderRadius: 5,
+                borderWidth: 10,
+                padding: 15,
+                paddingTop: 12
+            }, contextPu: payload.pu});
+        }
     }
 
     changePop = (payload) => {
@@ -222,8 +251,16 @@ class App extends Component {
                 {customPopulation}
                 {customSchools}
             </Controls>
+            <ContextMenu contextStyle={this.state.contextStyle} schools={this.state.schoolData} pu={this.state.contextPu} />
         </div>);
     }
 }
+
+const ContextMenu = (props) => <div style={props.contextStyle}>
+    <span onClick={() => Dispatcher.dispatch({action: 'cancel_pu_change'})}style={{cursor: 'pointer', position: 'absolute', right: 5, top: 0, marginRight: 10, marginBottom: 10}}>&#10006;</span>
+    <div style={{marginTop: 8}}>
+        {Object.keys(props.schools).map(s =><div key={'selector_'+props.schools[s].id}><button style={{width: '100%', opacity: .8, color: props.schools[s].color === '#FFFF00' ? 'black' : 'white', backgroundColor: props.schools[s].color}} onClick={() => Dispatcher.dispatch({ action: 'change_pu', pu: props.pu, nextSchool: s})}>{props.schools[s].label}</button></div>)}
+    </div>
+</div>;
 
 export default App;
