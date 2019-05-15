@@ -20,7 +20,7 @@ class App extends Component {
             customPopulation: undefined,
             planningUnits: _.keyBy(Object.keys(GisData).map((k) => { return { id: k, color: undefined }; } ), 'id'),
             pop: 'EE-5th',
-            contextStyle: { },
+            contextStyle: { display: 'none' },
         };
     }
 
@@ -148,12 +148,12 @@ class App extends Component {
         const schools = this.state.schools;
         planningUnits[payload.pu].color = this.state.schoolData[nextSchool].color;
         schools[nextSchool].pus.push(payload.pu);
-        this.setState({schools: schools, planningUnits: planningUnits, contextStyle:{ }});
+        this.setState({schools: schools, planningUnits: planningUnits, contextStyle:{ display: 'none' }});
     }
 
     togglePlanningUnit = (payload) => {
         if(payload.action === 'cancel_pu_change'){
-            this.setState({contextStyle:{ }});
+            this.setState({contextStyle:{ display: 'none' }});
         } else if(payload.action === 'change_pu'){
             this.changePu(payload);
         } else if(payload.action === 'toggle_pu'){
