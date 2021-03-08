@@ -14,7 +14,14 @@ const center = (coords) => {
     return bounds.getCenter();
 }
 
-const handleRightClick = (e, pu) => Dispatcher.dispatch({action: 'select_pu', pu: pu, x: e.wa.x, y: e.wa.y});
+const handleRightClick = (e, pu) => {
+    Dispatcher.dispatch({
+        action: 'select_pu', 
+        pu: pu, 
+        x: e.domEvent.pageX, 
+        y: e.domEvent.pageY
+    });
+};
 
 export default (props) => Object.keys(props.gis).map(pu => {
     return <div key={pu}>

@@ -48,7 +48,7 @@ class SaveAndRestore extends Component {
             } }>Clear All Saves</button>;
         return <div>
             <div>
-                <button onClick={() => Dispatcher.dispatch({ action: 'set_default'}) }>2018-19 Planning Units</button>
+                <button onClick={() => Dispatcher.dispatch({ action: 'set_default'}) }>2020-21 Planning Units</button>
             </div>
             <br/>
             <div>
