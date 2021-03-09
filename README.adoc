@@ -3,7 +3,13 @@ In 2017, the DSISD district was debating when adopting a new elementary school m
 
 Fast forward to 2018.  Dr. Gearing asked me to "do the same thing" for the Middle Schools.  I attempted to edit the previous map to suit the MS needs, but it wasn't going too well.  I had been working with http://reactjs.org/[React.js] at work and I wanted some practice.  This project was born!  It wasn't quite as pretty; however, the underlying "framework" is much more modular providing the ability to adapt for the future.
 
-This brings us to today (2019).  There's once again the need for planning maps and hopefully this can help.  I've updated the population data (provided by Dr. Gearing) and added the ability to filter by school type (Elementary/Middle/High).
+Once again in 2019 there was a need for more maps.  I've updated the population data (provided by Dr. Gearing) and added the ability to filter by school type (Elementary/Middle/High).
+
+This brings us to today, and the latest installment of the maps (2021).  Cypress Springs is coming! Middle school zoning is in flux.  Visualize it all once again!
+
+=== Demo
+
+image::dsisd.gif[Directions]
 
 === Directions / Features
 
