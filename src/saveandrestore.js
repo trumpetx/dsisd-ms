@@ -49,6 +49,14 @@ class SaveAndRestore extends Component {
         return <div>
             <div>
                 <button onClick={() => Dispatcher.dispatch({ action: 'set_default'}) }>2020-21 Planning Units</button>
+                <br/><br/>
+                <button onClick={() => Dispatcher.dispatch({ action: 'change_pop', value: '6th-8th', dataset: 'default'}) }>Middle Opt 1</button>&nbsp;&nbsp;
+                <button style={{color: 'red'}} onClick={() => Dispatcher.dispatch({ action: 'change_pop', value: '6th-8th', dataset: 'ms_2'}) }>Middle Opt 2</button>&nbsp;&nbsp;
+                <button onClick={() => Dispatcher.dispatch({ action: 'change_pop', value: '6th-8th', dataset: 'ms_3'}) }>Middle Opt 3</button>
+                <br/><br/>
+                <button onClick={() => Dispatcher.dispatch({ action: 'change_pop', value: 'EE-5th', dataset: 'es_c'}) }>Elem Opt C</button>&nbsp;&nbsp;
+                <button onClick={() => Dispatcher.dispatch({ action: 'change_pop', value: 'EE-5th', dataset: 'es_d'}) }>Elem Opt D</button>&nbsp;&nbsp;
+                <button onClick={() => Dispatcher.dispatch({ action: 'change_pop', value: 'EE-5th', dataset: 'es_e'}) }>Elem Opt E</button>
             </div>
             <br/>
             <div>

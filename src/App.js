@@ -113,23 +113,56 @@ class App extends Component {
     }
 
     setDefault = (payload) => {
-        if(payload.action !== 'set_default'){
+        let ssmPus = ['34b', '36', '37a', '37b', '38', '39', '40', '41', '42a', '42b', '43a', '43b', '44', '45', '46', '47'];
+        let ssePus = ['36', '34b', '43a', '41', '42a', '42b', '43b', '44', '45', '40', '46', '38', '39', '47'];
+        let dsePus = ['2', '4', '5', '11', '12', '13', '15', '16', '17', '18', '19', '20a', '20b', '35'];
+        let csePus = [];
+        if(payload.action === 'set_default') {
+            // nothing
+         } else if(payload.action === 'set_ms_2') {
+            const toRemove = ['34b', '38', '39', '40', '43a', '43b', '44', '45', '46', '47'];
+            const toAdd = ['20a', '33', '35'];
+            ssmPus = _.remove(ssmPus, pu => toRemove.indexOf(pu) === -1)
+            ssmPus = _.concat(ssmPus, toAdd);
+        } else if(payload.action === 'set_ms_3') {
+            const toRemove = ['34b', '42b', '43a', '43b', '45'];
+            ssmPus = _.remove(ssmPus, pu => toRemove.indexOf(pu) === -1)
+        } else if(payload.action === 'set_es_c') {
+            csePus = ['31', '32', '30', '34a', '34b', '38', '39', '40', '42b', '43a', '43b', '44', '45', '46', '47'];
+            ssePus = _.concat(ssePus, ['33', '20a', '35']);
+            dsePus = _.concat(dsePus, ['1']);
+            dsePus = _.remove(dsePus, pu => ssePus.indexOf(pu) === -1 );
+            ssePus = _.remove(ssePus, pu => csePus.indexOf(pu) === -1)
+        } else if(payload.action === 'set_es_d') {
+            csePus = ['27', '28', '31', '32', '30', '34a', '34b', '38', '39', '40', '42b', '43a', '43b', '44', '45', '46', '47'];
+            ssePus = _.concat(ssePus, ['33', '20a', '35']);
+            dsePus = _.concat(dsePus, ['1']);
+            dsePus = _.remove(dsePus, pu => ssePus.indexOf(pu) === -1 );
+            ssePus = _.remove(ssePus, pu => csePus.indexOf(pu) === -1)
+        } else if(payload.action === 'set_es_e') {
+            csePus = ['34b', '38', '39', '40', '42b', '43a', '43b', '44', '45', '46', '47'];
+            ssePus = _.concat(ssePus, ['33', '20a', '35']);
+            dsePus = _.concat(dsePus, ['1']);
+            dsePus = _.remove(dsePus, pu => ssePus.indexOf(pu) === -1 );
+            ssePus = _.remove(ssePus, pu => csePus.indexOf(pu) === -1)
+        } else {
             return;
-        };
+        }
         let schools = this.state.schools;
         let planningUnits = this.state.planningUnits;
         _.forEach(schools, (school) => school.pus = []);
         // Specific to Middle School Planning 2018
         if(schools['dsm']) {
-            schools['ssm'].pus = ['34b', '36', '37a', '37b', '38', '39', '40', '41', '42', '43a', '43b', '44', '45', '46', '47'];
+            schools['ssm'].pus = ssmPus;
             schools['dsm'].pus = _.xor(Object.keys(GisData), schools['ssm'].pus);
         } else if(schools['dshs']){
             schools['dshs'].pus = Object.keys(GisData);
         } else if(schools['dse']) {
             schools['roe'].pus = ['37a', '37b'];
-            schools['sse'].pus = ['36', '34b', '43a', '41', '42', '43b', '44', '45', '40', '46', '38', '39', '47'];
-            schools['dse'].pus = ['2', '4', '5', '11', '12', '13', '15', '16', '17', '18', '19', '20a', '20b', '35'];
-            schools['wse'].pus = _.xor(Object.keys(GisData), _.concat(schools['roe'].pus, schools['sse'].pus, schools['dse'].pus));
+            schools['sse'].pus = ssePus;
+            schools['dse'].pus = dsePus;
+            schools['cse'].pus = csePus;
+            schools['wse'].pus = _.xor(Object.keys(GisData), _.concat(schools['roe'].pus, schools['sse'].pus, schools['dse'].pus, schools['cse'].pus));
         }
         Object.keys(schools).forEach(k => _.forEach(schools[k].pus, (pu) => planningUnits[pu].color = this.state.schoolData[k].color));
         this.setState({schools: schools, planningUnits: planningUnits});
@@ -189,7 +222,7 @@ class App extends Component {
         if(payload.action !== 'change_pop'){
             return;
         }
-        this.setState({pop: payload.value}, this.reset);
+        this.setState({pop: payload.value}, () => this.reset(payload.dataset));
     }
 
     componentDidMount() {
@@ -206,14 +239,14 @@ class App extends Component {
         this.reset();
     }
 
-    reset = () => {
+    reset = (dataset) => {
         Dispatcher.dispatch({
             action: 'upload_schools',
             file: require('./schools.csv'),
             next: {
                 action: 'upload_population',
                 file: require('./students.csv'),
-                next: {action: 'set_default'}
+                next: {action: 'set_' + (dataset || 'default')}
             }
         });
     }
