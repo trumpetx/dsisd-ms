@@ -1,7 +1,7 @@
 {
   "name": "dsisd",
-  "homepage": "https://trumpetx.com/dsisd/",
-  "version": "2.0.0",
+  "homepage": "https://dsisd.trumpetx.com",
+  "version": "2.1.0",
   "private": true,
   "dependencies": {
     "flux": "^4.0.3",
