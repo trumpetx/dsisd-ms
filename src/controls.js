@@ -57,7 +57,7 @@ class Controls extends Component {
             <Upload />
             <br/>
             <br/>
-            <a href="https://gitlab.com/trumpetx/dsisd2/">Source and instructions</a>
+            <a href="https://github.com/trumpetx/dsisd-ms">Source and instructions</a>
             <br/>
             <br/>
         </div>);
